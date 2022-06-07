@@ -2,19 +2,22 @@
 
 This repo will build a docker image that can be used as a provider for [Vagrant](https://www.vagrantup.com) as a Linux development environment.
 
-The ready made Docker Hub image can be found here: [rofrano/vagrant-provider:ubuntu](https://hub.docker.com/repository/docker/rofrano/vagrant-provider)
+The ready made Docker Hub image can be found here: [devicemanager/vagrant-provider:ubuntu](https://hub.docker.com/repository/docker/devicemanager/vagrant-provider)
 
 ## Why Vagrant with Docker?
 
- This was inspired by Apple's introduction of the M1 chip which is ARM based. That means that solutions which use Vagrant and VirtualBox will not work on Apple M1 because VirtualBox requires an Intel processors. This lead me to find a solution for a virtual development environment that works with ARM and thus Apple M1 computers. You can find out more information about why I built it here:
+ This was inspired by Apple's introduction of the M1 chip which is ARM based. That means that solutions which use Vagrant and VirtualBox will not work on Apple M1 because VirtualBox requires an Intel processors. It was already developed by John Rofrano, I needed to extend it with centos from Mathew (see below). John's website with references is here:
 
 [Developing on Apple M1 Silicon with Virtual Environments](https://johnrofrano.medium.com/developing-on-apple-m1-silicon-with-virtual-environments-4f5f0765fd2f)
+
+This provisioning is still somewhat confusing since Vagrant and Docker have different stategies. Vagrant is more like old-school fatt provisioning with full blown hosts, while Docker is slim fast provisioning with just what you need to get a service running in an isolated container. This fork is just some of my experimentation on the original authors repo. 
+
 
 [Docker](https://www.docker.com) has introduced [Docker Desktop for Apple silicon](https://docs.docker.com/docker-for-mac/apple-silicon/) that runs Docker on Macs that have the Apple M1 chip. By using Docker as a provisioner for Vagrant, we can simulate the same experience as developers using Vagrant with VirtualBox. This is one case where you actually do want a Docker container to behave like a VM.
 
 ## Image Contents
 
-The `ubuntu` image is based on Ubuntu 21.04 and the `debian` image is Debian 11. Both contain the packages that are needed for a valid vagrant box. This includes the `vagrant` userid with password-less `sudo` privileges. It also contains as `sshd` server. Normally, it is considered a bad idea to run an `ssh` daemon in a Docker container but in this case, the Docker container is emulating a Virtual Machine (VM) to provide a development environment so it makes perfect sense. ;-)
+The `ubuntu` image is based on Ubuntu 21.04 and the `debian` image is Debian 11. Both contain the packages that are needed for a valid vagrant box. This includes the `vagrant` userid with password-less `sudo` privileges. It also contains as `sshd` server. Normally, it is considered a bad idea to run an `ssh` daemon in a Docker container but in this case, the Docker container is emulating a Virtual Machine (VM) to provide a development environment so it makes perfect sense. Also my machine is pretty fatt, compared to what is usually accepted as Docker a container. But then you have a developer environent in one place. In fact you keep the source on the host and run different OSes for your client development. This way you should be able to switch OS easily.  ;-)
 
 ## Example Vagrantfile
 
@@ -40,7 +43,7 @@ end
 
 ### Example: Docker in Docker
 
-This image will also run docker in docker. To install docker using vagrant add this to the `Vagrantfile`:
+This image will/can also run docker in docker. To install docker using vagrant add/uncomment this to the `Vagrantfile`:
 
 ```ruby
   # Install Docker and pull an image
@@ -58,7 +61,7 @@ If you want to test the ARM version on an Intel computer just uncomment the `doc
 There is also a `debian` variant to this image that is based on `debian:11`. That can be used by changing the `docker.image` line above to use the `rofrano/vagrant-provider:debian` image instead like this:
 
 ```ruby
-    docker.image = "rofrano/vagrant-provider:debian"
+    docker.image = "devicemanager/vagrant-provider:debian"
 ```
 
 ## Command Line Usage

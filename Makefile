@@ -5,9 +5,11 @@
 ## ----------------------------------------------------------------------
 
 # These can be overidden with env vars.
-REGISTRY ?= rofrano
+REGISTRY ?= devicemanager
 IMAGE_NAME ?= vagrant-provider
-IMAGE_TAG ?= ubuntu
+#IMAGE_TAG ?= debian
+#IMAGE_TAG ?= ubuntu
+IMAGE_TAG ?= centos
 IMAGE ?= $(REGISTRY)/$(IMAGE_NAME):$(IMAGE_TAG)
 PLATFORM ?= "linux/amd64,linux/arm64"
 

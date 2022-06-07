@@ -1,11 +1,11 @@
 # Build with:
 # docker buildx build --platform linux/amd64,linux/arm64 --push --tag rofrano/vagrant-provider:debian .
 FROM debian:bullseye
-LABEL MAINTAINER="John Rofrano <rofrano@gmail.com>"
+LABEL MAINTAINER="René Geers <rene.geers@gmail.com>"
 
 ENV DEBIAN_FRONTEND noninteractive
 
-# Install packages needed for SSH and interactive OS
+# Install packages needed for SSH and interactive OS and ansible deployment and development
 RUN apt-get update && \
     apt-get -y install \
         openssh-server \
@@ -14,8 +14,17 @@ RUN apt-get update && \
         man-db \
         curl \
         wget \
+        openjdk-8-jdk \
+        maven \
+        python3-pip \
+        direnv \
+        ansible \
+        less \
+        net-tools \
         vim-tiny && \
     apt-get -qq clean && \
+    pip install paramiko && \
+    mkdir /vagrant && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 # Enable systemd (from Matthew Warman's mcwarman/vagrant-provider)
