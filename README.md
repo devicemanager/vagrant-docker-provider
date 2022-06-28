@@ -54,6 +54,9 @@ This image will/can also run docker in docker. To install docker using vagrant a
 
 This will install Docker and pull the `alpine:latest` image. You can pull and run any image you'd like.
 
+The example Vagrantfile I made here will create an ubuntu and a centos cluster, with some examples on inline provisioning scripts.
+It starts with a fat machine that contains a lot, but this can now be reduced and added in the provisioning scripts, depending on your need.
+
 ### Example: ARM64
 
 If you want to test the ARM version on an Intel computer just uncomment the `docker.create_args` line which adds `--platform=linux/arm64` to the arguments. This will add the `--platform` flag to the `docker run` command to force the `aarch64` image to be used via `qemu`.
@@ -77,8 +80,14 @@ This will use this the docker image specified in your `Vagrantfile` as the base 
 You can also run this using the provided `Makefile` with:
 
 ```sh
-make run
+make run 
 ```
+or
+
+```sh
+make rerun 
+```
+This will destroy your containers and provision a new cluster
 
 ## Build Multi-Archtecture Image
 

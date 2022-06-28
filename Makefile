@@ -42,10 +42,15 @@ build:	## Build all of the project Docker images
 	$(info Building $(IMAGE) for $(PLATFORM)...)
 	docker buildx build --file Dockerfile.$(IMAGE_TAG)  --pull --platform=$(PLATFORM) --tag $(IMAGE) --push .
 
+.PHONY: rerun
+rerun:	## Rerun a vagrant VM using this image
+	$(info Bringing up virtual machine with Docker...)
+	vagrant destroy -f && vagrant up --provider=docker --provision
+
 .PHONY: run
 run:	## Run a vagrant VM using this image
 	$(info Bringing up virtual machine with Docker...)
-	vagrant up --provider=docker
+	vagrant up --provider=docker --provision
 
 .PHONY: remove
 remove:	## Stop and remove the buildx builder
