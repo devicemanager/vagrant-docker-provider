@@ -44,13 +44,18 @@ build:	## Build all of the project Docker images
 
 .PHONY: rerun
 rerun:	## Rerun a vagrant VM using this image
-	$(info Bringing up virtual machine with Docker...)
+	$(info Bringing up virtual machines with Docker...)
 	vagrant destroy -f && vagrant up --provider=docker --provision
 
 .PHONY: run
 run:	## Run a vagrant VM using this image
-	$(info Bringing up virtual machine with Docker...)
+	$(info Bringing up virtual machines with Docker...)
 	vagrant up --provider=docker --provision
+
+.PHONY: halt
+halt:	## Run a vagrant VM using this image
+	$(info Stopping virtual machines with Docker...)
+	vagrant halt 
 
 .PHONY: remove
 remove:	## Stop and remove the buildx builder

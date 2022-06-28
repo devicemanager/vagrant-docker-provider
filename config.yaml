@@ -1,0 +1,13 @@
+---
+configs:
+    use: 'local'
+    local:
+        node1:   'ansible.unicorn'
+        centos1: 'backend.unicorn'
+        centos2: 'services.unicorn'
+        centos3: 'frontend.unicorn'
+    dev:
+        node1:   'ansible.dev'
+        centos1: 'backend.dev'
+        centos2: 'services.dev'
+        centos3: 'frontend.dev'
