@@ -11,19 +11,10 @@ RUN apt-get update && \
         openssh-server \
         passwd \
         sudo \
-        man-db \
         curl \
         wget \
-        openjdk-8-jdk \
-        maven \
-        python3-pip \
-        direnv \
-        ansible \
-        less \
-        net-tools \
         vim-tiny && \
     apt-get -qq clean && \
-    pip install paramiko && \
     mkdir /vagrant && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 

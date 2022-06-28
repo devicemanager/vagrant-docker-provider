@@ -10,7 +10,7 @@ The ready made Docker Hub image can be found here: [devicemanager/vagrant-provid
 
 [Developing on Apple M1 Silicon with Virtual Environments](https://johnrofrano.medium.com/developing-on-apple-m1-silicon-with-virtual-environments-4f5f0765fd2f)
 
-This provisioning is still somewhat confusing since Vagrant and Docker have different stategies. Vagrant is more like old-school fatt provisioning with full blown hosts, while Docker is slim fast provisioning with just what you need to get a service running in an isolated container. This fork is just some of my experimentation on the original authors repo. 
+This provisioning is still somewhat confusing since Vagrant and Docker have different strategies. Vagrant is more like old-school fat provisioning with full-blown hosts, while Docker is slim fast provisioning with just what you need to get a service running in an isolated container. This fork is just some of my experimentation on the original authors' repo. 
 
 
 [Docker](https://www.docker.com) has introduced [Docker Desktop for Apple silicon](https://docs.docker.com/docker-for-mac/apple-silicon/) that runs Docker on Macs that have the Apple M1 chip. By using Docker as a provisioner for Vagrant, we can simulate the same experience as developers using Vagrant with VirtualBox. This is one case where you actually do want a Docker container to behave like a VM.
@@ -29,7 +29,7 @@ Vagrant.configure("2") do |config|
 
   config.vm.provider :docker do |docker, override|
     override.vm.box = nil
-    docker.image = "rofrano/vagrant-provider:ubuntu"
+    docker.image = "devicemanager/vagrant-provider:ubuntu"
     docker.remains_running = true
     docker.has_ssh = true
     docker.privileged = true
@@ -58,7 +58,7 @@ This will install Docker and pull the `alpine:latest` image. You can pull and ru
 
 If you want to test the ARM version on an Intel computer just uncomment the `docker.create_args` line which adds `--platform=linux/arm64` to the arguments. This will add the `--platform` flag to the `docker run` command to force the `aarch64` image to be used via `qemu`.
 
-There is also a `debian` variant to this image that is based on `debian:11`. That can be used by changing the `docker.image` line above to use the `rofrano/vagrant-provider:debian` image instead like this:
+There is also a `debian` variant to this image that is based on `debian:11`. That can be used by changing the `docker.image` line above to use the `devicemanager/vagrant-provider:debian` image instead like this:
 
 ```ruby
     docker.image = "devicemanager/vagrant-provider:debian"
@@ -103,7 +103,7 @@ make init
 
 This will initialize the `buildx` provider as above.
 
-### Building the default Ubuntu image
+### Building the Ubuntu image
 
 Then you can build the multi-platform image like this (where `{account}` is the name of your Docker Hub account):
 
@@ -119,26 +119,26 @@ You can also build your image with `make`:
 make build REGISTRY={your account}
 ```
 
-It is better if you set an environment varaible called `REGISTRY` and it will be picked up by `make`. For example, if your Docker Hub account name is `foo` you would use:
+It is better if you set an environment variable called `REGISTRY` and it will be picked up by `make`. For example, if your Docker Hub account name is `foo` you would use:
 
 ```sh
 export REGISTRY=foo
 make build
 ```
 
-This will ensure that all of the `make` commands will use your registry and not mine (i.e., `rofrano`)
+This will ensure that all of the `make` commands will use your registry and not mine (i.e., `devicemanager`)
 
 ### Building image variants
 
-The default image is `ubuntu` but you can build the `debian` image by adding the argument `IMAGE_TAG=debian` like this:
+The default image is `centos` but you can build the `debian` or `ubuntu` image by adding the argument `IMAGE_TAG=debian` like this:
 
 ```sh
 make build IMAGE_TAG=debian
 ```
 
-This will use the `Dockerfile.debian` and push to an image called `rofrano/vagrant-provider:debian`
+This will use the `Dockerfile.debian` and push to an image called `devicemanager/vagrant-provider:debian`
 
-If you want to add your own variant, just create a `Dockerfile` with the variant name as the extension and it will be picked up (e.g., `Dockerfile.alpine`). Then you can use `make build IMAGE_TAG=alpine` to build and push that image.
+If you want to add your own variant, just create a `Dockerfile` with the variant name as the extension, and it will be picked up (e.g., `Dockerfile.alpine`). Then you can use `make build IMAGE_TAG=alpine` to build and push that image.
 
 ### Remove the buildx instance
 
@@ -157,4 +157,4 @@ make remove
 
 ## Credits
 
-A huge thanks to [Matthew Warman](http://warman.io) who provided the `Dockerfile` from [mcwarman/vagrant-provider](https://github.com/mcwarman/vagrant-docker-provider) as the bases for my `Dockerfile` using `systemd`. He added all the magic to make it work and I am very greateful for his generosity.
+A huge thanks to  [John Rofrano] (http://johnrofrano.com) who made most of this working for Apple M1 Macs and [Matthew Warman](http://warman.io) who provided the `Dockerfile` from [mcwarman/vagrant-provider](https://github.com/mcwarman/vagrant-docker-provider) as the bases for my `Dockerfile` using `systemd`.

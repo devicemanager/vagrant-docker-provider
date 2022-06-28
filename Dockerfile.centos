@@ -4,7 +4,7 @@ ENV container docker
 
 LABEL MAINTAINER="René Geers <rene.geers@gmail.com>"
 
-# Install packages needed for SSH and interactive OS and ansible deployment and development
+# Install packages needed for SSH and interactive OS
 RUN yum -y update && \
     yum -y install epel-release && \
     yum -y install sudo \ 
@@ -16,10 +16,16 @@ RUN yum -y update && \
         curl \
         wget \
         openjdk-8-jdk \
+        tomcat \
+        tomcat-lib \
+	tomcat-jsp \
+	tomcat-admin-webapps \
+	tomcat-native \
+	tomcat-servlet \
+	tomcat-el \
         maven \
 	python3-pip \
 	direnv \
-	ansible \
 	less \
 	net-tools \
         NetworkManager \
@@ -28,7 +34,6 @@ RUN yum -y update && \
     mkdir /vagrant && \
     rm -rf /tmp/* /var/tmp/*
 
-# Activate SystemD
 # by Daniel Walsh, https://developers.redhat.com/blog/2014/05/05/running-systemd-within-docker-container
 RUN (cd /lib/systemd/system/sysinit.target.wants/; for i in *; do [ $i == \
 systemd-tmpfiles-setup.service ] || rm -f $i; done); \

@@ -1,25 +1,48 @@
-# -*- mode: ruby -*-
-# vi: set ft=ruby :
+VAGRANTFILE_API_VERSION = "2"
+ENV["LC_ALL"] = "en_US.UTF-8"
 
-Vagrant.configure(2) do |config|
+CLUSTER_SIZE = 3
 
-  ############################################################
-  # Provider for Docker on Intel or ARM (aarch64)
-  ############################################################
-  config.vm.hostname = "centos"
-  config.vm.provider :docker do |docker, override|
-    override.vm.box = nil
-    docker.image = "devicemanager/vagrant-provider:centos"
-    docker.remains_running = true
-    docker.has_ssh = true
-    docker.privileged = true
-    docker.volumes = ["/sys/fs/cgroup:/sys/fs/cgroup:rw"]
-    docker.create_args = ["--cgroupns=host"]
-  end  
+Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
-  # Install Docker and pull an image
-  # config.vm.provision :docker do |d|
-  #   d.pull_images "alpine:latest"
-  # end
+  1.upto(CLUSTER_SIZE) do |i|
+    config.vm.define vm_name = "node#{i}" do |config|
+
+      config.vm.provider "docker" do |docker|
+        docker.image = "devicemanager/vagrant-provider:ubuntu"
+        docker.has_ssh = true
+        docker.remains_running = true
+        docker.privileged = true
+        docker.volumes = ["/sys/fs/cgroup:/sys/fs/cgroup:rw"]
+        docker.create_args = ["--cgroupns=host"]
+      end
+      config.vm.hostname = vm_name
+      config.vm.network :private_network, ip: '192.168.77.' + (10 + i).to_s
+    end
+  end
+
+  script = <<-SCRIPT
+      apt-get -y update
+      case "$HOSTNAME" in
+        node1)
+           echo This is node1
+           apt-get -y install openssh-server 
+           ;;
+        node2)
+           echo This is node2
+           ;;
+        node3) 
+          echo This is node3
+          ;;
+        node4)
+          echo This is node4
+          ;;
+        *)
+          echo This node has not been defined
+      esac
+  SCRIPT
+  script.sub! 'CLUSTER_SIZE', CLUSTER_SIZE.to_s
+  i=1
+  config.vm.provision "shell", inline: script
 
 end
